@@ -1,6 +1,8 @@
 const http = require('http');
 const fs = require('fs');
 const socket = require('socket.io');
+const markdownit = require('markdown-it');
+const md = markdownit();
 
 var homepage = "./index.html";
 var server = http.createServer((req, res) => {
@@ -13,9 +15,11 @@ var server = http.createServer((req, res) => {
       res.end(data);
     }
   });
-}).listen(8080);
+}).listen(8080, () => {
+  console.log("Server listening on http://localhost:8080");
+});
 
-const io = socket.io(server);
+const io = socket(server);
 
 io.on('connection', socket => {
   console.log("Client connected");
@@ -23,8 +27,12 @@ io.on('connection', socket => {
     console.log(`Socket received the "hi" message coupled with: "${data}"`);
   });
   
-  socket.on('markdown', (data) => {
-    const html = marked(data);
+  socket.on('markdown', (file) => {
+    var html = md.render(String(fs.readFile("pages/main.md", function(err, data) {
+      if (err) throw err;
+      return data;
+    })));
+    console.log(html);
     socket.emit('html', html);
   });
 });

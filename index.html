@@ -9,16 +9,21 @@
 <body>
     <h1>NotesApp</h1>
     <p>Click me to send a socket message!</p>
+    <input id="message"></input>
+    <pre>Open file</pre>
     <div id="notes"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
         const notes = document.getElementById('notes');
         const socket = io();
         $('p').click(function() {
-            socket.emit("hi", "The <p> node was clicked!");
-        })
-        socket.on("note", (note) => {
-            notes.innerHTML += `${note}`;f
+            socket.emit("hi", $("#message").val());
+        });
+        $('pre').click(function() {
+            socket.emit("markdown", "./pages/main.md");
+        });
+        socket.on("html", (note) => {
+            notes.innerHTML += `${note}`;
         });
     </script>
 </body>
