@@ -26,8 +26,22 @@
 
         //$(document).bind('keydown', 'ctrl+q', newQuote());
 
-        $("body").keypress(function(e) {
-            $('h1').text(e.key);
+        let textBuffer = ``;
+
+        $("body").keydown(function(e) {
+            $('h1').text(e.which);
+            if (e.keyCode == 13) {
+                socket.emit("newText", textBuffer);
+            } else if (e.which === 8) {
+                textBuffer = textBuffer.slice(0,-1);
+            } else if (e.which === 32) {
+                textBuffer += ` `;
+            } else if (/*e.which >= 48 && e.which <= 90*/e.key.length === 1) {
+                textBuffer += e.key;
+            } else if (e.ctrlKey && e.key === "q") {
+                socket.emit("newquote");
+            }
+            $("#notes").children("*").last().text(textBuffer);
         });
 
         function newQuote() {

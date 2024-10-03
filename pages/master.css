@@ -7,4 +7,6 @@ quote {
     padding-left: 20px;
     border-left: 3px solid #aaa;
     background-color: #eee;
+    border-radius: 3px;
+    width: 150px;
 }

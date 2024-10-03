@@ -4,6 +4,11 @@ const socket = require('socket.io');
 const markdownit = require('markdown-it');
 const md = markdownit();
 
+function editJSON(file, content) {
+  currJSON = JSON.parse(fs.readFileSync(file));
+  console.log(currJSON);
+}
+
 var homepage = "./index.html";
 var server = http.createServer((req, res) => {
   switch (req.url) {
@@ -42,6 +47,10 @@ io.on('connection', socket => {
         html += `<h1>${currFile["order"][i]["text"]}</h1>`;
       } else if (currFile["order"][i]["type"] === "quote") {
         html += `<quote>${currFile["order"][i]["text"]}</quote>`
+      } else if (currFile["order"][i]["type"] === "ul") {
+        for (let j in currFile["order"][i]["contents"]) {
+          html += 
+        }
       }
     }
     console.log(html);
