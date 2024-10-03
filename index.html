@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotesApp</title>
+</head>
+<body>
+    <h1>NotesApp</h1>
+    <div id="notes"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        const notes = document.getElementById('notes');
+        const socket = io();
+        socket.on("note", (note) => {
+            notes.innerHTML += `${note}`;
+        });
+    </script>
+</body>
+</html>
