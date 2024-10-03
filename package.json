@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "express-xml-bodyparser": "^0.3.0",
     "markdown-it": "^14.1.0",
     "socket.io": "^4.8.0"
   }

@@ -26,12 +26,20 @@ io.on('connection', socket => {
   socket.on('hi', (data) => {
     console.log(`Socket received the "hi" message coupled with: "${data}"`);
   });
+  socket.on("getfiles", (user) => {
+    var userfile = JSON.parse(fs.readFileSync("users.json"));
+    console.log(userfile["users"][0]["info"]["files"]);
+    socket.emit("filesel", userfile["users"][0]["info"]["files"]);
+  });
   
   socket.on('markdown', (file) => {
-    var html = md.render(String(fs.readFile("pages/main.md", function(err, data) {
-      if (err) throw err;
-      return data;
-    })));
+    var currFile = JSON.parse(fs.readFileSync(file));
+    var html = ``
+    for (let i in currFile["order"]) {
+      if (currFile["order"][i]["type"] === "h1") {
+        html += `<h1>${currFile["order"][i]["text"]}`;
+      } else if (currFile["order"][i]["type"] === "quote")
+    }
     console.log(html);
     socket.emit('html', html);
   });

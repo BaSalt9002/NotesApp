@@ -8,21 +8,25 @@
 </head>
 <body>
     <h1>NotesApp</h1>
-    <p>Click me to send a socket message!</p>
-    <input id="message"></input>
     <pre>Open file</pre>
+    <p></p>
     <div id="notes"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
         const notes = document.getElementById('notes');
         const socket = io();
-        $('p').click(function() {
-            socket.emit("hi", $("#message").val());
-        });
         $('pre').click(function() {
-            socket.emit("markdown", "./pages/main.md");
+            socket.emit("getfiles", "basalt09");
         });
-        socket.on("html", (note) => {
+        $('p').click(function() {
+            socket.emit("markdown", $(this).text());
+        });
+        socket.on("filesel", function(files) {
+            for (let file in files) {
+                $('p').append(files[file]["location"]);
+            }
+        });
+        socket.on("html", function(note) {
             notes.innerHTML += `${note}`;
         });
     </script>
