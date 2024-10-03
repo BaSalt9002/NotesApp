@@ -37,8 +37,10 @@ io.on('connection', socket => {
     var html = ``
     for (let i in currFile["order"]) {
       if (currFile["order"][i]["type"] === "h1") {
-        html += `<h1>${currFile["order"][i]["text"]}`;
-      } else if (currFile["order"][i]["type"] === "quote")
+        html += `<h1>${currFile["order"][i]["text"]}</h1>`;
+      } else if (currFile["order"][i]["type"] === "quote") {
+        html += `<quote>${currFile["order"][i]["text"]}</quote>`
+      }
     }
     console.log(html);
     socket.emit('html', html);
