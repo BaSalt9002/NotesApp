@@ -20,7 +20,7 @@ const io = socket.io(server);
 io.on('connection', socket => {
   console.log("Client connected");
   socket.on('hi', (data) => {
-    console.log(data);
+    console.log(`Socket received the "hi" message coupled with: "${data}"`);
   });
   
   socket.on('markdown', (data) => {

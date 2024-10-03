@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NotesApp</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
     <h1>NotesApp</h1>
+    <p>Click me to send a socket message!</p>
     <div id="notes"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
         const notes = document.getElementById('notes');
         const socket = io();
+        $('p').click(function() {
+            socket.emit("hi", "The <p> node was clicked!");
+        })
         socket.on("note", (note) => {
-            notes.innerHTML += `${note}`;
+            notes.innerHTML += `${note}`;f
         });
     </script>
 </body>
