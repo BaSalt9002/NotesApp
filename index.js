@@ -6,15 +6,17 @@ const md = markdownit();
 
 var homepage = "./index.html";
 var server = http.createServer((req, res) => {
-  fs.readFile(homepage, (err, data) => {
-    if (err) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('File not found');
-    } else {
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.end(data);
-    }
-  });
+  switch (req.url) {
+    case "/pages/master.css":
+      console.log("Css finding...");
+      res.writeHead(200, {"Content-Type":"text/css"});
+      res.write(fs.readFileSync("pages/master.css"));
+      break;
+    default:
+      res.writeHead(200, {"Content-Type":"text/html"});
+      res.write(fs.readFileSync(homepage));
+  }
+  res.end();
 }).listen(8080, () => {
   console.log("Server listening on http://localhost:8080");
 });
@@ -23,8 +25,8 @@ const io = socket(server);
 
 io.on('connection', socket => {
   console.log("Client connected");
-  socket.on('hi', (data) => {
-    console.log(`Socket received the "hi" message coupled with: "${data}"`);
+  socket.on('console', (data) => {
+    console.log(`Client Console: ${data}`);
   });
   socket.on("getfiles", (user) => {
     var userfile = JSON.parse(fs.readFileSync("users.json"));

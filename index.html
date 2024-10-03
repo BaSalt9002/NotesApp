@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NotesApp</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="pages/main.css">
+    <link rel="stylesheet" type="text/css" href="pages/master.css">
 </head>
 <body>
     <h1>NotesApp</h1>
@@ -19,14 +19,27 @@
         $('pre').click(function() {
             socket.emit("getfiles", "basalt09");
         });
+
         $('p').click(function() {
             socket.emit("markdown", $(this).text());
         });
+
+        //$(document).bind('keydown', 'ctrl+q', newQuote());
+
+        $("body").keypress(function(e) {
+            $('h1').text(e.key);
+        });
+
+        function newQuote() {
+            socket.emit("newquote");
+        }
+
         socket.on("filesel", function(files) {
             for (let file in files) {
-                $('p').append(files[file]["location"]);
+                $('p').append(`<p>${files[file]["location"]}</p>`);
             }
         });
+
         socket.on("html", function(note) {
             notes.innerHTML += `${note}`;
         });

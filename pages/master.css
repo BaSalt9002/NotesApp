@@ -1,0 +1,10 @@
+body {
+    font-family: sans-serif;
+}
+
+quote {
+    margin-left: 10px;
+    padding-left: 20px;
+    border-left: 3px solid #aaa;
+    background-color: #eee;
+}
