@@ -1,10 +1,29 @@
 {
     "order": [
-        {"type":"h1", "text":"Home"},
-        {"type":"quote", "text":"Here you can see a bunch of wonderful ways you can use NotesApp!"},
-        {"type":"ul", "contents":[
-            {"type":"li", "text":"List"},
-            {"type":"li", "text":"Another item"}
-        ]}
+        {
+            "type": "h1",
+            "text": "Home"
+        },
+        {
+            "type": "quote",
+            "text": "Here you can see a bunch of wonderful ways you can use NotesApp!"
+        },
+        {
+            "type": "ul",
+            "contents": [
+                {
+                    "type": "li",
+                    "text": "List"
+                },
+                {
+                    "type": "li",
+                    "text": "Another item"
+                }
+            ]
+        },
+        {
+            "type": "quote",
+            "text": "HI!"
+        }
     ]
 }

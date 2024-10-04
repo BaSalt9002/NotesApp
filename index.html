@@ -13,6 +13,7 @@
     <p></p>
     <div id="notes"></div>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="textbox.js"></script>
     <script type="text/javascript">
         const notes = document.getElementById('notes');
         const socket = io();
@@ -38,8 +39,8 @@
                 textBuffer += ` `;
             } else if (/*e.which >= 48 && e.which <= 90*/e.key.length === 1) {
                 textBuffer += e.key;
-            } else if (e.ctrlKey && e.key === "q") {
-                socket.emit("newquote");
+            } else if (e.which === 13) {
+                socket.emit("add", getType(textBuffer));
             }
             $("#notes").children("*").last().text(textBuffer);
         });

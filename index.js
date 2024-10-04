@@ -7,7 +7,11 @@ const md = markdownit();
 function editJSON(file, content) {
   currJSON = JSON.parse(fs.readFileSync(file));
   console.log(currJSON);
+  currJSON["order"].push(content);
+  fs.writeFileSync(file, JSON.stringify(currJSON));
 }
+
+editJSON("pages/home.json", {"type":"quote", "text":"HI!"});
 
 var homepage = "./index.html";
 var server = http.createServer((req, res) => {
@@ -41,19 +45,25 @@ io.on('connection', socket => {
   
   socket.on('markdown', (file) => {
     var currFile = JSON.parse(fs.readFileSync(file));
-    var html = ``
+    var html = ``;
     for (let i in currFile["order"]) {
       if (currFile["order"][i]["type"] === "h1") {
         html += `<h1>${currFile["order"][i]["text"]}</h1>`;
       } else if (currFile["order"][i]["type"] === "quote") {
-        html += `<quote>${currFile["order"][i]["text"]}</quote>`
+        html += `<quote>${currFile["order"][i]["text"]}</quote>`;
       } else if (currFile["order"][i]["type"] === "ul") {
+        html += `<ul>`;
         for (let j in currFile["order"][i]["contents"]) {
-          html += 
+          html += `<li>${currFile["order"][i]["contents"][j]["text"]}</li>`;
+          console.log(currFile["order"][i]["contents"][j]["text"]);
         }
+        html += `</ul>`;
       }
     }
     console.log(html);
     socket.emit('html', html);
+  });
+  socket.on("addNote", (type) => {
+
   });
 });
