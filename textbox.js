@@ -1,15 +1,18 @@
 function getType(text) {
-    let segment = text.substr(0,4);
-    $('h1').text(segment);
-    if (segment.search("*")) {
+    let segment = text.substring(0,1);
+    //$('h1').text(Boolean(segment === ">"));
+    if (segment.search(`*`) === 0) {
         return "ul";
-    } else if (segment.search("#")) {
+    } else if (segment.search(`#`) != -1) {
         return "h1";
-    } else if (segment.search(">")) {
+    } else if (segment === ">") {
         return "quote";
     }
-    return "error in the getType() function";
+    callback(Boolean(segment === ">"));
 }
+$(document).ready(function() {
+    $('h1').text(getType(">quote"));
+})
 
 let currLine = 0;
 function lineCtrl(action, totalLines) {
