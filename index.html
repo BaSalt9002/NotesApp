@@ -13,16 +13,18 @@
     <p></p>
     <div id="notes"></div>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="textbox.js"></script>
+    <script type="text/javascript" src="textbox.js"></script>
     <script type="text/javascript">
         const notes = document.getElementById('notes');
         const socket = io();
+        let currfile = "";
         $('pre').click(function() {
             socket.emit("getfiles", "basalt09");
         });
 
         $('p').click(function() {
             socket.emit("markdown", $(this).text());
+            currfile = $(this).text();
         });
 
         //$(document).bind('keydown', 'ctrl+q', newQuote());
@@ -30,17 +32,18 @@
         let textBuffer = ``;
 
         $("body").keydown(function(e) {
-            $('h1').text(e.which);
             if (e.keyCode == 13) {
-                socket.emit("newText", textBuffer);
+                socket.emit('console', "stupid");
+                socket.emit("addNote", getType(textBuffer), textBuffer, currfile).then(function() {
+                    socket.emit('console', getType(textBuffer));
+                    textBuffer = ``;
+                });
             } else if (e.which === 8) {
                 textBuffer = textBuffer.slice(0,-1);
             } else if (e.which === 32) {
                 textBuffer += ` `;
             } else if (/*e.which >= 48 && e.which <= 90*/e.key.length === 1) {
                 textBuffer += e.key;
-            } else if (e.which === 13) {
-                socket.emit("add", getType(textBuffer));
             }
             $("#notes").children("*").last().text(textBuffer);
         });
@@ -56,7 +59,7 @@
         });
 
         socket.on("html", function(note) {
-            notes.innerHTML += `${note}`;
+            notes.innerHTML = `${note}`;
         });
     </script>
 </body>

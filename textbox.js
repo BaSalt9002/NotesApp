@@ -1,12 +1,14 @@
 function getType(text) {
     let segment = text.substr(0,4);
-    if (segment.search(` * `)) {
+    $('h1').text(segment);
+    if (segment.search("*")) {
         return "ul";
-    } else if (segment.search(` # `)) {
+    } else if (segment.search("#")) {
         return "h1";
-    } else if (segment.search(` > `)) {
+    } else if (segment.search(">")) {
         return "quote";
     }
+    return "error in the getType() function";
 }
 
 let currLine = 0;

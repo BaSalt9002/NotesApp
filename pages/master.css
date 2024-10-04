@@ -2,11 +2,17 @@ body {
     font-family: sans-serif;
 }
 
+#notes {
+    width: 80%;
+}
+
 quote {
     margin-left: 10px;
     padding-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     border-left: 3px solid #aaa;
     background-color: #eee;
     border-radius: 3px;
-    width: 150px;
+    width: 50%;
 }
