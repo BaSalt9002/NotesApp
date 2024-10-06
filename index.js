@@ -51,8 +51,8 @@ var server = http.createServer((req, res) => {
       res.write(fs.readFileSync(homepage));
   }
   res.end();
-}).listen(8080, () => {
-  console.log("Server listening on http://localhost:8080");
+}).listen(3000, () => {
+  console.log("Server listening on http://localhost:3000");
 });
 
 const io = socket(server);
@@ -77,16 +77,16 @@ io.on('connection', socket => {
     console.log("addNote");
     switch(type) {
       case "h1":
-        editJSON(file, {"type":"h1","text":note});
+        editJSON(file, {"type":"h1","text":note.slice(1)});
         break;
       case "quote":
-        editJSON(file, {"type":"quote","text":note});
+        editJSON(file, {"type":"quote","text":note.slice(1)});
         break;
       case "ul":
         editJSON(file, {
           "type":"ul",
           "contents": [
-            {"type":"li", "text":note}
+            {"type":"li", "text":note.slice(1)}
           ]
         });
         break;

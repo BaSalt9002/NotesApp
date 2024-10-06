@@ -16,3 +16,9 @@ quote {
     border-radius: 3px;
     width: 50%;
 }
+
+#entrybox {
+    padding: 3px;
+    background-color: #efefef;
+    border: 1px solid #dddddd;
+}
