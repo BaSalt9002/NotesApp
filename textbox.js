@@ -3,10 +3,17 @@ function getType(text) {
     //$('h1').text(Boolean(segment === ">"));
     if (segment.search(`\\*`) != -1) {
         return "ul";
-    } else if (segment.search(`\\#`) != -1) {
-        return "h1";
+    } else if (segment.search(`\\###`) != -1) {
+        return "h3";
     } else if (segment.search(`\\>`) != -1) {
         return "quote";
+    } else if (segment.search(`\\##`) != -1) {
+        return "h2";
+    } else if (segment.search(`\\#`) != -1) {
+        return "h1";
+    }
+    else {
+        return "p";
     }
 }
 

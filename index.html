@@ -1,23 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NotesApp</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="pages/master.css">
 </head>
 <body>
-    <h1>NotesApp</h1>
-    <pre>Open file</pre>
-    <p></p>
+    <div id="sidebar">
+        <h1>NotesApp</h1>
+        <pre>Open file</pre>
+        <p></p>
+    </div>
     <div id="notes"></div>
+    <div id="delete">&#x1F5D1</div>
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="textbox.js"></script>
     <script type="text/javascript">
         const notes = document.getElementById('notes');
         const socket = io();
         let currfile = "";
+        let currNode = 0;
+
+        $(document).ready(function() {
+            $("#delete").hide();
+        });
+
         $('pre').click(function() {
             socket.emit("getfiles", "basalt09");
         });
@@ -30,20 +39,44 @@
         //$(document).bind('keydown', 'ctrl+q', newQuote());
 
         let textBuffer = ``;
+        let isNewline = true;
 
         $("body").keydown(function(e) {
             if (e.keyCode == 13) {
-                socket.emit('console', String(getType(textBuffer)));
                 socket.emit("addNote", getType(textBuffer), textBuffer, currfile);
+                isNewline = true;
+                textBuffer = ``;
             } else if (e.which === 8) {
                 textBuffer = textBuffer.slice(0,-1);
             } else if (e.which === 32) {
                 textBuffer += ` `;
             } else if (/*e.which >= 48 && e.which <= 90*/e.key.length === 1) {
+                if (isNewline === true) {
+                    $("#notes").children("*").last().append(`<div id="entrybox"></div>`);
+                    isNewline = false;
+                }
                 textBuffer += e.key;
             }
             $("#notes").children("*").last().text(textBuffer);
         });
+
+        $("#notes").click(function(e) {
+            const rect = e.target.getBoundingClientRect();
+            const x = rect.left + window.scrollX;
+            const y = rect.top + window.scrollY;
+            $("#delete").show();
+            $('#delete').attr({"style":`top:${y}px;`});
+
+            parent = document.getElementById("notes");
+            currNode = Array.prototype.indexOf.call(parent.children, event.target);
+            $("#notes > *").removeAttr('style');
+            $("#notes > *").eq(currNode).attr({"style":"border: 1px solid blue;"});
+        });
+
+        $("#delete").click(function() {
+            socket.emit("del", currfile, currNode);
+            document.getElementById("notes").children[currNode].remove();
+        })
 
         function newQuote() {
             socket.emit("newquote");
@@ -56,7 +89,7 @@
         });
 
         socket.on("html", function(note) {
-            notes.innerHTML = `${note}`;
+            notes.innerHTML = `${note}<div id="entrybox">[...]</div>`;
         });
     </script>
 </body>

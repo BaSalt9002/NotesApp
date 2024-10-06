@@ -1,12 +1,20 @@
 body {
     font-family: sans-serif;
+    display:grid;
+    grid-template-columns: 150px;
 }
 
 #notes {
-    width: 80%;
+    grid-column: 2;
+    margin-left: 50px
 }
 
-quote {
+#sidebar {
+    grid-column: 1;
+    width: 150px;
+}
+
+#quote {
     margin-left: 10px;
     padding-left: 20px;
     padding-top: 5px;
@@ -14,11 +22,21 @@ quote {
     border-left: 3px solid #aaa;
     background-color: #eee;
     border-radius: 3px;
-    width: 50%;
+    width: 75%;
 }
 
 #entrybox {
     padding: 3px;
     background-color: #efefef;
     border: 1px solid #dddddd;
+    margin-top: 20px;
+    border-radius: 5px;
+    height: 20px;
+    width: 30%;
+}
+
+#delete {
+    position: absolute;
+    left: 190px;
+    font-size: 20px;
 }

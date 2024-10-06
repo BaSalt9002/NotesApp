@@ -4,10 +4,22 @@ const socket = require('socket.io');
 const markdownit = require('markdown-it');
 const md = markdownit();
 
+function returnsTrue(){
+  return Boolean(1===1);
+}
+
 function editJSON(file, content) {
   currJSON = JSON.parse(fs.readFileSync(file));
-  console.log(currJSON);
   currJSON["order"].push(content);
+  fs.writeFileSync(file, JSON.stringify(currJSON));
+}
+
+function appendJSON(file, type, content) {
+  currJSON = JSON.parse(fs.readFileSync(file));
+  switch(type) {
+    case "ul":
+      currJSON["order"].findLast(returnsTrue)["contents"].push(content);
+  }
   fs.writeFileSync(file, JSON.stringify(currJSON));
 }
 
@@ -18,36 +30,38 @@ function getHTML(file) {
     if (currFile["order"][i]["type"] === "h1") {
       html += `<h1>${currFile["order"][i]["text"]}</h1>`;
     } else if (currFile["order"][i]["type"] === "quote") {
-      html += `<quote>${currFile["order"][i]["text"]}</quote>`;
+      html += `<div id="quote">${currFile["order"][i]["text"]}</div>`;
     } else if (currFile["order"][i]["type"] === "ul") {
       html += `<ul>`;
       for (let j in currFile["order"][i]["contents"]) {
         html += `<li>${currFile["order"][i]["contents"][j]["text"]}</li>`;
-        console.log(currFile["order"][i]["contents"][j]["text"]);
       }
       html += `</ul>`;
+    } else if(currFile["order"][i]["type"] === "h2") {
+      html += `<h2>${currFile["order"][i]["text"]}</h2>`;
+    } else if (currFile["order"][i]["type"] === "h3") {
+      html += `<h3>${currFile["order"][i]["text"]}</h3>`;
+    }
+    else {
+      html += `<p>${currFile["order"][i]["text"]}</p>`;
     }
   }
   return html;
 }
 
-console.log(getHTML("pages/home.json"));
-
 var homepage = "./index.html";
 var server = http.createServer((req, res) => {
   switch (req.url) {
     case "/pages/master.css":
-      console.log("Css finding...");
       res.writeHead(200, {"Content-Type":"text/css"});
       res.write(fs.readFileSync("pages/master.css"));
       break;
     case "/textbox.js":
-      console.log("js finding...");
       res.writeHead(200, {"Content-Type":"text/javascript"});
       res.write(fs.readFileSync("textbox.js"));
       break;
     default:
-      res.writeHead(200, {"Content-Type":"text/html"});
+      res.writeHead(200, {"Content-Type":"text/html","charset":"utf-8"});
       res.write(fs.readFileSync(homepage));
   }
   res.end();
@@ -65,7 +79,6 @@ io.on('connection', socket => {
 
   socket.on("getfiles", (user) => {
     var userfile = JSON.parse(fs.readFileSync("users.json"));
-    console.log(userfile["users"][0]["info"]["files"]);
     socket.emit("filesel", userfile["users"][0]["info"]["files"]);
   });
   
@@ -74,25 +87,40 @@ io.on('connection', socket => {
   });
 
   socket.on("addNote", (type, note, file) => {
-    console.log("addNote");
     switch(type) {
       case "h1":
-        editJSON(file, {"type":"h1","text":note.slice(1)});
+      case "h2":
+      case "h3":
+        editJSON(file, {"type":type,"text":note.slice(type.slice(1))});
         break;
       case "quote":
         editJSON(file, {"type":"quote","text":note.slice(1)});
         break;
       case "ul":
-        editJSON(file, {
-          "type":"ul",
-          "contents": [
-            {"type":"li", "text":note.slice(1)}
-          ]
-        });
+        if (JSON.parse(fs.readFileSync(file))["order"].findLast(returnsTrue)["type"] === "ul") {
+          appendJSON(file, "ul", {"type":"li","text":note.slice(1)});
+          console.log("Adding to list");
+        } else {
+          editJSON(file, {
+            "type":"ul",
+            "contents": [
+              {"type":"li", "text":note.slice(1)}
+            ]
+          });
+        }
+        break;
+      case "p":
+        editJSON(file, {"type":"p","text":note});
         break;
       default:
         console.log("error");
     }
     socket.emit("html", getHTML(file));
+  });
+
+  socket.on("del", (file, element) => {
+    var currJSON = JSON.parse(fs.readFileSync(file));
+    currJSON["order"].splice(element, 1);
+    fs.writeFileSync(file, JSON.stringify(currJSON));
   });
 });
