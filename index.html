@@ -43,7 +43,7 @@
 
         $("body").keydown(function(e) {
             if (e.keyCode == 13) {
-                socket.emit("addNote", getType(textBuffer), textBuffer, currfile);
+                socket.emit("addNote", getType(textBuffer), textBuffer, currfile, currNode);
                 isNewline = true;
                 textBuffer = ``;
             } else if (e.which === 8) {
@@ -70,6 +70,9 @@
             parent = document.getElementById("notes");
             currNode = Array.prototype.indexOf.call(parent.children, event.target);
             $("#notes > *").removeAttr('style');
+            if (event.target.id === "entrybox") {
+                $("#delete").hide();
+            }
             $("#notes > *").eq(currNode).attr({"style":"border: 1px solid blue;"});
         });
 
@@ -90,6 +93,7 @@
 
         socket.on("html", function(note) {
             notes.innerHTML = `${note}<div id="entrybox">[...]</div>`;
+            currNode = $("#notes:last-child").index();
         });
     </script>
 </body>

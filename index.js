@@ -8,9 +8,9 @@ function returnsTrue(){
   return Boolean(1===1);
 }
 
-function editJSON(file, content) {
+function editJSON(file, content, location) {
   currJSON = JSON.parse(fs.readFileSync(file));
-  currJSON["order"].push(content);
+  currJSON["order"].splice(location, 0, content);
   fs.writeFileSync(file, JSON.stringify(currJSON));
 }
 
@@ -86,12 +86,12 @@ io.on('connection', socket => {
     socket.emit("html", getHTML(file));
   });
 
-  socket.on("addNote", (type, note, file) => {
+  socket.on("addNote", (type, note, file, location) => {
     switch(type) {
       case "h1":
       case "h2":
       case "h3":
-        editJSON(file, {"type":type,"text":note.slice(type.slice(1))});
+        editJSON(file, {"type":type,"text":note.slice(type.slice(1))}, location);
         break;
       case "quote":
         editJSON(file, {"type":"quote","text":note.slice(1)});
