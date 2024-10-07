@@ -1,8 +1,6 @@
 const http = require('http');
 const fs = require('fs');
 const socket = require('socket.io');
-const markdownit = require('markdown-it');
-const md = markdownit();
 const crypto = require('crypto');
 
 function returnsTrue(){
@@ -19,11 +17,11 @@ function editJSON(file, content, location) {
   fs.writeFileSync(file, JSON.stringify(currJSON));
 }
 
-function appendJSON(file, type, content) {
+function appendJSON(file, type, content, location) {
   currJSON = JSON.parse(fs.readFileSync(file));
   switch(type) {
     case "ul":
-      currJSON["order"].findLast(returnsTrue)["contents"].push(content);
+      currJSON["order"][location]["contents"].push(content);
   }
   fs.writeFileSync(file, JSON.stringify(currJSON));
 }
@@ -92,7 +90,7 @@ io.on('connection', socket => {
     socket.emit("html", getHTML(file));
   });
 
-  socket.on("addNote", (type, note, file, location) => {
+  socket.on("addNote", (type, note, file, location, listChild) => {
     switch(type) {
       case "h1":
       case "h2":
@@ -103,7 +101,7 @@ io.on('connection', socket => {
         editJSON(file, {"type":"quote","text":note.slice(1)}, location);
         break;
       case "ul":
-        if (JSON.parse(fs.readFileSync(file))["order"].findLast(returnsTrue)["type"] === "ul") {
+        if (JSON.parse(fs.readFileSync(file))["order"][location]["type"] === "ul") {
           appendJSON(file, "ul", {"type":"li","text":note.slice(1)});
           console.log("Adding to list");
         } else {

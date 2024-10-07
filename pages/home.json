@@ -1,1 +1,72 @@
-{"name":"Home","order":[{"type":"h1","text":"Home"},{"type":"quote","text":"Here you can see a bunch of wonderful ways you can use NotesApp!"},{"type":"ul","contents":[{"type":"li","text":"List"},{"type":"li","text":"Another item"},{"type":"li","text":"final item"}]},{"type":"h1","text":"Header"},{"type":"quote","text":" Blockquote"},{"type":"ul","contents":[{"type":"li","text":"List item 1"},{"type":"li","text":"List item 2"}]},{"type":"h2","text":"Smaller"},{"type":"h3","text":"Smallest"},{"type":"p","text":"something"}]}
+{
+    "name": "Home",
+    "order": [
+        {
+            "type": "ul",
+            "contents": [
+                {
+                    "type": "li",
+                    "text": "list item"
+                }
+            ]
+        },
+        {
+            "type": "h1",
+            "text": "Home"
+        },
+        {
+            "type": "quote",
+            "text": "Here you can see a bunch of wonderful ways you can use NotesApp!"
+        },
+        {
+            "type": "ul",
+            "contents": [
+                {
+                    "type": "li",
+                    "text": "List"
+                },
+                {
+                    "type": "li",
+                    "text": "Another item"
+                },
+                {
+                    "type": "li",
+                    "text": "final item"
+                }
+            ]
+        },
+        {
+            "type": "h1",
+            "text": "Header"
+        },
+        {
+            "type": "quote",
+            "text": " Blockquote"
+        },
+        {
+            "type": "ul",
+            "contents": [
+                {
+                    "type": "li",
+                    "text": "List item 1"
+                },
+                {
+                    "type": "li",
+                    "text": "List item 2"
+                }
+            ]
+        },
+        {
+            "type": "h2",
+            "text": "Smaller"
+        },
+        {
+            "type": "h3",
+            "text": "Smallest"
+        },
+        {
+            "type": "p",
+            "text": "something"
+        }
+    ]
+}

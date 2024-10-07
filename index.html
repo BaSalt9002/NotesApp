@@ -31,6 +31,7 @@
         const socket = io();
         let currfile = "";
         let currNode = 0;
+        let currChild = 0;
 
         $(document).ready(function() {
             $("#delete").hide();
@@ -91,15 +92,19 @@
             $("#notes > *").removeAttr('style');
             if (event.target.id === "entrybox" || event.target.id === "notes") {
                 $("#delete").hide();
+            } else if (Boolean(String(event.target).search("<li>")) === true) {
+                currNode = event.target.parentElement.index;
+                currChild = Array.prototype.indexOf.call(event.target.parentElement.children, event.target);
+                console.log(currChild);
+                console.log(currNode);
             }
             $("#notes > *").eq(currNode).attr({"style":"border: 1px solid blue;"});
-            console.log(currNode);
         });
 
         $("#delete").click(function() {
             socket.emit("del", currfile, currNode);
             document.getElementById("notes").children[currNode].remove();
-        })
+        });
 
         function newQuote() {
             socket.emit("newquote");
