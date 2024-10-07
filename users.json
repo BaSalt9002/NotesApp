@@ -1,12 +1,1 @@
-{"users":[
-    {"uname": "basalt09",
-    "info": {
-        "id": 1,
-        "files": [
-            {
-                "location": "pages/home.json",
-                "name": "Home"
-            }
-        ]
-    }}
-]}
+{"users":[{"uname":"basalt09","info":{"id":1,"files":[{"location":"pages/home.json","name":"Home"},{"location":"pages/efbe8f1c41131760.json","name":"Smthn"},{"location":"pages/40211cda2d0844b5.json","name":"Notes 9/27"}]}}]}

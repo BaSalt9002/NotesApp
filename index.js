@@ -3,6 +3,7 @@ const fs = require('fs');
 const socket = require('socket.io');
 const markdownit = require('markdown-it');
 const md = markdownit();
+const crypto = require('crypto');
 
 function returnsTrue(){
   return Boolean(1===1);
@@ -10,7 +11,11 @@ function returnsTrue(){
 
 function editJSON(file, content, location) {
   currJSON = JSON.parse(fs.readFileSync(file));
-  currJSON["order"].splice(location, 0, content);
+  if (location === -1) {
+    currJSON["order"].push(content);
+  } else {
+    currJSON["order"].splice(location+1, 0, content);
+  }
   fs.writeFileSync(file, JSON.stringify(currJSON));
 }
 
@@ -51,6 +56,7 @@ function getHTML(file) {
 
 var homepage = "./index.html";
 var server = http.createServer((req, res) => {
+  console.log(req.url);
   switch (req.url) {
     case "/pages/master.css":
       res.writeHead(200, {"Content-Type":"text/css"});
@@ -94,7 +100,7 @@ io.on('connection', socket => {
         editJSON(file, {"type":type,"text":note.slice(type.slice(1))}, location);
         break;
       case "quote":
-        editJSON(file, {"type":"quote","text":note.slice(1)});
+        editJSON(file, {"type":"quote","text":note.slice(1)}, location);
         break;
       case "ul":
         if (JSON.parse(fs.readFileSync(file))["order"].findLast(returnsTrue)["type"] === "ul") {
@@ -110,7 +116,7 @@ io.on('connection', socket => {
         }
         break;
       case "p":
-        editJSON(file, {"type":"p","text":note});
+        editJSON(file, {"type":"p","text":note}, location);
         break;
       default:
         console.log("error");
@@ -122,5 +128,37 @@ io.on('connection', socket => {
     var currJSON = JSON.parse(fs.readFileSync(file));
     currJSON["order"].splice(element, 1);
     fs.writeFileSync(file, JSON.stringify(currJSON));
+  });
+
+  socket.on("newfile", (data, user) => {
+    let filename = '';
+    crypto.generateKey('hmac', { length: 64 }, (err, key) => {
+      if (err) throw err;
+      filename = key.export().toString('hex');
+      console.log(filename);
+
+      newJSON = {
+        "name":data,
+        "order": [
+          {"type":"h1","text":data}
+        ]
+      }
+      fs.writeFileSync(("pages/" + filename + ".json"), JSON.stringify(newJSON));
+
+      let users = fs.readFileSync("users.json");
+      let userindex = 0;
+      users = JSON.parse(users);
+      for (i in users["users"]) {
+        if (users["users"][i] === user) {
+          userindex = i;
+        }
+      }
+      users["users"][userindex]["info"]["files"].push({
+        "location":("pages/" + filename + ".json"),
+        "name":data
+      });
+
+      fs.writeFileSync("users.json", JSON.stringify(users));
+    });
   });
 });
