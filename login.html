@@ -23,6 +23,7 @@
             const username = $("#username").val();
             const password = $("#password").val();
             document.cookie = `username=${username};password=${password};path=/`;
+            socket.emit("console", document.cookie);
         }
     </script>
     <div id="loginWindow">
