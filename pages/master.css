@@ -1,7 +1,7 @@
 body {
     font-family: "Urbanist";
     display:grid;
-    grid-template-columns: 150px;
+    grid-template-columns: 180px;
     background-color: #333;
     color: white;
 }
@@ -25,6 +25,7 @@ body {
     margin-left: none;
     background-color: #414141;
     height: 500px;
+    padding-left: 10px;
 }
 
 #quote {
@@ -53,4 +54,13 @@ body {
     position: absolute;
     left: 190px;
     font-size: 20px;
+}
+
+#newfile {
+    width: 80%;
+    background-color: #505050;
+    border-radius: 8px;
+    border: none;
+    padding: 3px;
+    /*color: #e7e7e7;*/
 }
