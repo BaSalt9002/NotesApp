@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotesApp Login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="pages/master.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        #submitBtn {
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        socket=io();
+        function login() {
+            const username = $("#username").val();
+            const password = $("#password").val();
+            document.cookie = `username=${username};password=${password};path=/`;
+        }
+    </script>
+    <div id="loginWindow">
+        <form id="login" action="login();">
+            <input type="text" id="username" placeholder="username">
+            <input id="password" placeholder="password" type="text">
+            <input type="submit" value="Login" id="submitBtn">
+        </form>
+    </div>
+</body>
+</html>

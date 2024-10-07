@@ -36,6 +36,10 @@
             $("#delete").hide();
             $("#newfile").hide();
             socket.emit("getfiles", "basalt09");
+            if (Boolean(document.cookie.search("username")) === true) {
+                const allCookies = document.cookie;
+                
+            }
         });
 
         $('pre').click(function() {
