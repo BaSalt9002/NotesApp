@@ -38,7 +38,8 @@
             socket.emit("getfiles", "basalt09");
             if (Boolean(document.cookie.search("username")) === true) {
                 const allCookies = document.cookie;
-                
+                const allCookiesArray = allCookies.split(";");
+                socket.emit("console", allCookiesArray);
             }
         });
 
