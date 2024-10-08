@@ -5,6 +5,36 @@ const markdownit = require('markdown-it');
 const md = markdownit();
 const crypto = require('crypto');
 
+const algorithm = 'aes-256-ctr';
+let key = 'MySuperSecretKey';
+key = crypto.createHash('sha256').update(String(key)).digest('base64').substr(0, 32);
+
+const encrypt = (buffer, key) => {
+    // Create an initialization vector
+    const iv = crypto.randomBytes(16);
+    // Create a new cipher using the algorithm, key, and iv
+    const cipher = crypto.createCipheriv(algorithm, key, iv);
+    // Create the new (encrypted) buffer
+    const result = Buffer.concat([iv, cipher.update(buffer), cipher.final()]);
+    return result;
+};
+
+const decrypt = (encrypted, key) => {
+   // Get the iv: the first 16 bytes
+   const iv = encrypted.slice(0, 16);
+   // Get the rest
+   encrypted = encrypted.slice(16);
+   // Create a decipher
+   const decipher = crypto.createDecipheriv(algorithm, key, iv);
+   // Actually decrypt it
+   const result = Buffer.concat([decipher.update(encrypted), decipher.final()]);
+   return result;
+};
+
+const plain = Buffer.from('Hello, world!');
+console.log(encrypt(plain).toString());
+console.log(decrypt(encrypt(plain)).toString());
+
 function returnsTrue(){
   return Boolean(1===1);
 }
@@ -56,7 +86,7 @@ function getHTML(file) {
 
 var homepage = "./index.html";
 var server = http.createServer((req, res) => {
-  console.log(req.url);
+  console.log(req.cookies);
   switch (req.url) {
     case "/pages/master.css":
       res.writeHead(200, {"Content-Type":"text/css"});
@@ -143,6 +173,7 @@ io.on('connection', socket => {
           {"type":"h1","text":data}
         ]
       }
+
       fs.writeFileSync(("pages/" + filename + ".json"), JSON.stringify(newJSON));
 
       let users = fs.readFileSync("users.json");
@@ -160,5 +191,8 @@ io.on('connection', socket => {
 
       fs.writeFileSync("users.json", JSON.stringify(users));
     });
+  });
+  socket.on("getIP", () => {
+
   });
 });

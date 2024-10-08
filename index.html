@@ -31,20 +31,19 @@
         const socket = io();
         let currfile = "";
         let currNode = 0;
-        document.cookie = 'username=basalt09';
+        document.cookie = 'username=basalt09';  
 
         $(document).ready(function() {
             $("#delete").hide();
             $("#newfile").hide();
-            socket.emit("getfiles", "basalt09");
-            socket.emit("console", document.cookie);
-            socket.emit("console", Boolean(document.cookie.search("username=") === true));
+            socket.emit("getIP");
+            socket.emit("getfiles", "basalt09", alert("Please enter your passcode", "abc123"));
             if (Boolean(document.cookie.search("username")) === true) {
                 const allCookies = document.cookie;
                 const allCookiesArray = allCookies.split(";");
                 //socket.emit("console", allCookies);
             } else {
-                window.location = "login.html";
+                //window.location = "login.html";
             }
         });
 
