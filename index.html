@@ -35,7 +35,15 @@
         $(document).ready(function() {
             $("#delete").hide();
             $("#newfile").hide();
-            socket.emit("getfiles", "basalt09");
+            socket.emit("getIP");
+            socket.emit("getfiles", "basalt09", prompt("Please enter your passcode", "abc123"));
+            if (Boolean(document.cookie.search("username")) === true) {
+                const allCookies = document.cookie;
+                const allCookiesArray = allCookies.split(";");
+                //socket.emit("console", allCookies);
+            } else {
+                //window.location = "login.html";
+            }
         });
 
         $('pre').click(function() {
